@@ -1,6 +1,7 @@
 <?php
-session_start();
+// session_start(); // Removido para evitar error de sesión duplicada
 require_once __DIR__ . '/../Models/User.php';
+require_once __DIR__ . '/../config/url_config.php';
 
 class AuthController {
     private $user;
@@ -46,11 +47,11 @@ class AuthController {
                 }
                 
                 $_SESSION['success'] = "¡Bienvenido de vuelta, " . $this->user->name . "!";
-                header("Location: ../../Views/Users/dashboard.php");
+                header("Location: " . getBaseUrl() . "/Views/Users/dashboard.php");
                 exit();
             } else {
                 $_SESSION['error'] = "Email o contraseña incorrectos";
-                header("Location: ../../Views/Auth/login.php");
+                header("Location: " . getBaseUrl() . "/Views/Auth/login.php");
                 exit();
             }
         }
@@ -210,7 +211,7 @@ class AuthController {
     // Requerir login (middleware)
     public static function requireLogin() {
         if (!self::isLoggedIn()) {
-            header("Location: ../../Views/Auth/login.php");
+            header("Location: " . getBaseUrl() . "/Views/Auth/login.php");
             exit();
         }
     }
@@ -231,6 +232,7 @@ class AuthController {
 
 // Manejo de rutas
 if (isset($_GET['action'])) {
+    session_start(); // Iniciar sesión aquí en lugar del inicio del archivo
     $auth = new AuthController();
     
     switch ($_GET['action']) {

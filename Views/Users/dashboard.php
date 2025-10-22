@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../../Controllers/AuthController.php';
+require_once __DIR__ . '/../../config/url_config.php';
 
 // Verificar que el usuario esté logueado
 AuthController::requireLogin();
@@ -16,13 +17,13 @@ $user = AuthController::getCurrentUser();
     <title>Dashboard - PlanMaster</title>
     
     <!-- CSS -->
-    <link rel="stylesheet" href="../../Publics/css/styles_dashboard.css">
+    <link rel="stylesheet" href="<?php echo getBaseUrl(); ?>/Publics/css/styles_dashboard.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../../Resources/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="<?php echo getBaseUrl(); ?>/Resources/favicon.ico">
 </head>
 <body>
     <!-- Header -->
@@ -47,6 +48,18 @@ $user = AuthController::getCurrentUser();
                 <p class="dashboard-subtitle">Bienvenido a tu espacio de planificación estratégica</p>
             </div>
             
+            <!-- Botón para iniciar proyecto -->
+            <div class="start-project-section">
+                <div class="start-project-card">
+                    <h2>¿Listo para comenzar?</h2>
+                    <p>Inicia tu primer proyecto estratégico y completa los 11 apartados con nuestra guía paso a paso.</p>
+                    <button class="btn-start-project">
+                        <span class="btn-icon">🚀</span>
+                        Iniciar Nuevo Proyecto
+                    </button>
+                </div>
+            </div>
+
             <!-- Resumen de la aplicación -->
             <div class="app-summary">
                 <div class="summary-card">
@@ -168,18 +181,6 @@ $user = AuthController::getCurrentUser();
                 </div>
             </div>
             
-            <!-- Botón para iniciar proyecto -->
-            <div class="start-project-section">
-                <div class="start-project-card">
-                    <h2>¿Listo para comenzar?</h2>
-                    <p>Inicia tu primer proyecto estratégico y completa los 11 apartados con nuestra guía paso a paso.</p>
-                    <button class="btn-start-project" onclick="startNewProject()">
-                        <span class="btn-icon">🚀</span>
-                        Iniciar Nuevo Proyecto
-                    </button>
-                </div>
-            </div>
-            
             <!-- Proyectos existentes (placeholder) -->
             <div class="existing-projects">
                 <h2>Tus Proyectos</h2>
@@ -198,6 +199,6 @@ $user = AuthController::getCurrentUser();
     <?php include 'footer.php'; ?>
     
     <!-- JavaScript -->
-    <script src="../../Publics/js/dashboard.js"></script>
+    <script src="<?php echo getBaseUrl(); ?>/Publics/js/dashboard.js"></script>
 </body>
 </html>

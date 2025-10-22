@@ -86,6 +86,12 @@ function startNewProject() {
 }
 
 function showProjectModal() {
+    // Verificar si ya existe un modal y cerrarlo
+    const existingModals = document.querySelectorAll('.project-modal-overlay');
+    if (existingModals.length > 0) {
+        existingModals.forEach(modal => modal.remove());
+    }
+    
     // Crear modal dinámicamente
     const modal = document.createElement('div');
     modal.className = 'project-modal-overlay';
@@ -323,13 +329,15 @@ function showProjectModal() {
 }
 
 function closeProjectModal() {
-    const modal = document.querySelector('.project-modal-overlay');
-    if (modal) {
+    const modals = document.querySelectorAll('.project-modal-overlay');
+    modals.forEach(modal => {
         modal.style.animation = 'fadeOut 0.3s ease-in';
         setTimeout(() => {
-            modal.remove();
+            if (modal.parentNode) {
+                modal.remove();
+            }
         }, 300);
-    }
+    });
 }
 
 function createProject() {
@@ -341,32 +349,38 @@ function createProject() {
         return;
     }
     
-    // Simular creación del proyecto
-    const projectData = {
-        id: Date.now(),
-        projectName: projectName,
-        companyName: companyName,
-        createdAt: new Date().toISOString(),
-        status: 'draft',
-        progress: 0
-    };
+    // Verificar si ya se está procesando una solicitud
+    const confirmBtn = document.querySelector('.btn-modal-confirm');
+    if (confirmBtn.disabled) {
+        return; // Ya se está procesando
+    }
     
-    // Guardar en localStorage (temporal)
-    const projects = JSON.parse(localStorage.getItem('userProjects') || '[]');
-    projects.push(projectData);
-    localStorage.setItem('userProjects', JSON.stringify(projects));
+    // Deshabilitar botón para evitar doble envío
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Creando...';
     
-    // Cerrar modal
-    closeProjectModal();
+    // Crear formulario para enviar datos
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '../../Controllers/ProjectController.php?action=create';
+    form.style.display = 'none';
     
-    // Mostrar notificación de éxito
-    showNotification('¡Proyecto creado exitosamente! Redirigiendo...', 'success');
+    // Agregar campos
+    const projectNameInput = document.createElement('input');
+    projectNameInput.type = 'hidden';
+    projectNameInput.name = 'project_name';
+    projectNameInput.value = projectName;
+    form.appendChild(projectNameInput);
     
-    // Simular redirección al editor del proyecto
-    setTimeout(() => {
-        // Aquí iría la redirección al editor del plan estratégico
-        window.location.href = `project-editor.php?id=${projectData.id}`;
-    }, 2000);
+    const companyNameInput = document.createElement('input');
+    companyNameInput.type = 'hidden';
+    companyNameInput.name = 'company_name';
+    companyNameInput.value = companyName;
+    form.appendChild(companyNameInput);
+    
+    // Agregar formulario al DOM y enviarlo
+    document.body.appendChild(form);
+    form.submit();
 }
 
 function showSectionPreview(sectionNumber) {

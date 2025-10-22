@@ -1,10 +1,11 @@
-t<?php
+<?php
 session_start();
 require_once __DIR__ . '/../../Controllers/AuthController.php';
+require_once __DIR__ . '/../../config/url_config.php';
 
 // Si ya está logueado, redirigir al dashboard
 if (AuthController::isLoggedIn()) {
-    header("Location: ../Users/dashboard.php");
+    header("Location: " . getBaseUrl() . "/Views/Users/dashboard.php");
     exit();
 }
 ?>
@@ -16,16 +17,16 @@ if (AuthController::isLoggedIn()) {
     <title>Iniciar Sesión - PlanMaster</title>
     
     <!-- CSS -->
-    <link rel="stylesheet" href="../../Publics/css/styles_login.css">
+    <link rel="stylesheet" href="<?php echo getBaseUrl(); ?>/Publics/css/styles_login.css">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../../Resources/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="<?php echo getBaseUrl(); ?>/Resources/favicon.ico">
 </head>
 <body>
     <div class="login-container">
         <!-- Panel izquierdo - Bienvenida -->
         <div class="welcome-panel">
-            <a href="../../index.php" class="back-button">← Volver al inicio</a>
+            <a href="<?php echo getBaseUrl(); ?>/index.php" class="back-button">← Volver al inicio</a>
             
             <div class="logo-welcome">PlanMaster</div>
             <p class="welcome-subtitle">Tu plan estratégico en un solo clic</p>
@@ -85,7 +86,7 @@ if (AuthController::isLoggedIn()) {
             
             <!-- Contenido de Login -->
             <div id="login-content" class="form-content active">
-                <form id="loginForm" method="POST" action="../../Controllers/AuthController.php?action=login">
+                <form id="loginForm" method="POST" action="<?php echo getBaseUrl(); ?>/Controllers/AuthController.php?action=login">
                     <div class="form-group">
                         <label for="login-email" class="form-label">Email</label>
                         <input type="email" id="login-email" name="email" class="form-input" 
@@ -116,7 +117,7 @@ if (AuthController::isLoggedIn()) {
             
             <!-- Contenido de Registro -->
             <div id="register-content" class="form-content">
-                <form id="registerForm" method="POST" action="../../Controllers/AuthController.php?action=register">
+                <form id="registerForm" method="POST" action="<?php echo getBaseUrl(); ?>/Controllers/AuthController.php?action=register">
                     <div class="form-group">
                         <label for="register-name" class="form-label">Nombre completo</label>
                         <input type="text" id="register-name" name="name" class="form-input" 
@@ -156,7 +157,7 @@ if (AuthController::isLoggedIn()) {
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     
     <!-- JavaScript -->
-    <script src="../../Publics/js/login.js"></script>
+    <script src="<?php echo getBaseUrl(); ?>/Publics/js/login.js"></script>
     
     <script>
         // Función para manejar la respuesta de Google
@@ -164,7 +165,7 @@ if (AuthController::isLoggedIn()) {
             console.log('Token de Google recibido:', response.credential);
             
             // Enviar el token al servidor
-            fetch('../../Controllers/AuthController.php?action=google_login', {
+            fetch('<?php echo getBaseUrl(); ?>/Controllers/AuthController.php?action=google_login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -178,7 +179,7 @@ if (AuthController::isLoggedIn()) {
                 if (data.success) {
                     console.log('Login exitoso:', data);
                     // Redirigir al dashboard
-                    window.location.href = '../Users/dashboard.php';
+                    window.location.href = '<?php echo getBaseUrl(); ?>/Views/Users/dashboard.php';
                 } else {
                     console.error('Error en login:', data.message);
                     alert('Error al iniciar sesión con Google: ' + data.message);
